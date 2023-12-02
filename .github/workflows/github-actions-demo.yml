@@ -23,7 +23,6 @@ jobs:
           rm -rf .github
           rm .env
           rm .gitignore
-          rm gha-creds-*.json
           touch .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
           echo "PASS_KEY=${{ secrets.PASS_KEY }}" >> .env
