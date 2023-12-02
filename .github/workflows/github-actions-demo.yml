@@ -31,11 +31,8 @@ jobs:
         with:
           name: authentication
           runtime: nodejs20
-          entrypoint: index.js
-          trigger: http
+#          entrypoint: index.js
+#          trigger: http
           region: asia-southeast2
           allow_unauthenticated: true
-      - name: remove creds file
-        run: |
-          rm gha-creds-*.json
 
