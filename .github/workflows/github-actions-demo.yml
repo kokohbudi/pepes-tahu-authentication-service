@@ -35,7 +35,4 @@ jobs:
           trigger: http
           region: asia-southeast2
           allow_unauthenticated: true
-      - name: remove creds file
-        run: |
-          rm gha-creds-*.json
 
