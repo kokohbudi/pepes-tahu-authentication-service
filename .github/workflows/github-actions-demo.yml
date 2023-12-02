@@ -6,6 +6,7 @@ on:
       - main
     paths-ignore:
       - 'readme.md'
+      - 'LICENSE'
 
 jobs:
   deploy:
@@ -17,7 +18,7 @@ jobs:
           rm -rf .git
           rm -rf .github
           rm .env
-          rm gha-creds-*.json
+          find ./ -name "gha-creds-*.json" | xargs rm
           rm .gitignore
           touch .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
