@@ -13,12 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: create env file
+      - name: clean unnecessary files
         run: |
           rm -rf .git
           rm -rf .github
           rm .env
-          find ./ -name "gha-creds-*.json" | xargs rm
           rm .gitignore
           touch .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
