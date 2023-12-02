@@ -22,12 +22,10 @@ jobs:
           touch .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
           echo "PASS_KEY=${{ secrets.PASS_KEY }}" >> .env
-          
-
       - uses: google-github-actions/setup-gcloud@v0
       - uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}\
       - name: Deploy Cloud Function
         uses: google-github-actions/deploy-cloud-functions@v1
         with:
@@ -37,4 +35,7 @@ jobs:
           trigger: http
           region: asia-southeast2
           allow_unauthenticated: true
+      - name: remove creds file
+        run: |
+          rm gha-creds-*.json
 
