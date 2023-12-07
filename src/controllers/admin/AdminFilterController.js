@@ -1,11 +1,11 @@
 import express from 'express';
 
 const router = express.Router();
-async function adminFilter(req, res, next) {
+async function adminFilterController(req, res, next) {
     console.log("adminFilter");
     next();
 }
 
-router.use('/admin', adminFilter);
+router.use('/admin', adminFilterController);
 
 export default router;
