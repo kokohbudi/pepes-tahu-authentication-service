@@ -31,7 +31,7 @@ jobs:
         with:
           name: authentication
           runtime: nodejs20
-#          entrypoint: index.js
+#          entry_point: authentication
 #          trigger: http
           region: asia-southeast2
           allow_unauthenticated: true
