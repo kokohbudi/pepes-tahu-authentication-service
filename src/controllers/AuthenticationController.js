@@ -26,8 +26,7 @@ async function getJwtForValidUser(username, password) {
         const user = await userService.getUserByPassword(username, password);
         return await generateToken(user);
     } catch (e) {
-        console.log(e);
-        throw new Error('User not found');
+        throw e;
     }
 
 }
@@ -48,7 +47,7 @@ app.post('/login', async (req, res) => {
             .json(bearerToken);
     } catch (e) {
         console.log(e);
-        res.status(401).send('Invalid User Or Password');
+        res.status(401).send(e.message);
     }
 });
 
