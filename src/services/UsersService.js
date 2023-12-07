@@ -1,9 +1,8 @@
-import {prisma} from "../util/prisma-client.js"
+import prisma from "../util/prisma-client.js"
 import BusinessException from "../exception/BusinessException.js";
 
-class UsersService {
-    async getUserByPassword(username, password) {
-
+export class UsersService {
+    async getUserByEmailAndPassword(username, password) {
             const user = await prisma.users.findUnique({
                 where: {
                     email: username,

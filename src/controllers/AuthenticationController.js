@@ -1,38 +1,27 @@
 import express from 'express';
-import base64url from 'base64url';
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
 import UsersService from "../services/UsersService.js";
 import BusinessException from "../exception/BusinessException.js";
+import JWTUtil from "../util/JWTUtil.js";
 
 const userService = new UsersService();
+const jwtUtil = new JWTUtil();
+
 dotenv.config();
 const app = express();
 
 async function generateToken(user) {
-    const jwtSecret = process.env.JWT_SECRET;
     const jwtPayload = {
         'id': user.id,
         'identifier': user.email,
         'name': user.name,
         'phone': user.phone
     };
-    const jwtToken = jwt.sign(jwtPayload, jwtSecret, {expiresIn: '1h'}); // expires in 1 hour
-    const encodedToken = base64url.encode(jwtToken);
-    return `${encodedToken}`;
+     // expires in 1 hour
+    return jwtUtil.generateToken(jwtPayload, '1h');
 }
 
-async function getJwtForValidUser(username, password) {
-    try {
-        const user = await userService.getUserByPassword(username, password);
-        return await generateToken(user);
-    } catch (e) {
-        throw e;
-    }
-
-}
-
-app.post('/login', async (req, res) => {
+async function login(req,res) {
     const initialPassKey = req.headers['x-initial-pass-key'];
     const identifier = req.body.identifier; // email
     const password = req.body.password;
@@ -43,7 +32,8 @@ app.post('/login', async (req, res) => {
         return;
     }
     try {
-        const bearerToken = await getJwtForValidUser(identifier, password);
+        const user = await userService.getUserByEmailAndPassword(identifier, password);
+        const bearerToken = await generateToken(user);
         res.status(200)
             .json(bearerToken);
     } catch (e) {
@@ -54,22 +44,22 @@ app.post('/login', async (req, res) => {
             res.status(500).send('Internal Server Error');
         }
     }
-});
+}
 
-app.get('/details', async (req, res) => {
+async function getDetailsByJWT(req, res) {
     var token = req.headers.authorization.split(' ')[1];
-    token=base64url.decode(token);
-    const jwtSecret = process.env.JWT_SECRET;
     try {
-        const decodedToken = await jwt.verify(token, jwtSecret);
+        const decodedToken = await jwtUtil.decodeToken(token);
         res.status(200)
             .json(decodedToken);
     } catch (e) {
         console.log(e);
         res.status(401).send('Invalid Token');
     }
-});
+}
 
+app.get('/details', getDetailsByJWT);
+app.post('/login', login);
 
 export default app;
 

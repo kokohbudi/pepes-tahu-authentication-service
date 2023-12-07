@@ -4,13 +4,13 @@ const userService = new UsersService();
 
 describe("Test User Services", () => {
     it('should be select user and password', async () => {
-        const user = await userService.getUserByPassword("kokohbudi@gmail.com", "kozaninja");
+        const user = await userService.getUserByEmailAndPassword("kokohbudi@gmail.com", "kozaninja");
         expect(user.password).toBe("kozaninja");
     });
 
     it('should throw an error for invalid passwords', async () => {
         try {
-            await userService.getUserByPassword('kokohbudi@gmail.com', 'wrongpassword');
+            await userService.getUserByEmailAndPassword('kokohbudi@gmail.com', 'wrongpassword');
         } catch (error) {
             expect(error.message).toBe('User not found');
         }
