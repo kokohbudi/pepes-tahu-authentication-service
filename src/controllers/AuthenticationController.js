@@ -3,6 +3,7 @@ import base64url from 'base64url';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import UsersService from "../services/UsersService.js";
+import BusinessException from "../exception/BusinessException.js";
 
 const userService = new UsersService();
 dotenv.config();
@@ -47,7 +48,11 @@ app.post('/login', async (req, res) => {
             .json(bearerToken);
     } catch (e) {
         console.log(e);
-        res.status(401).send(e.message);
+        if(e instanceof BusinessException) {
+            res.status(401).send(e.message);
+        }else{
+            res.status(500).send('Internal Server Error');
+        }
     }
 });
 
