@@ -23,13 +23,11 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
           echo "PASS_KEY=${{ secrets.PASS_KEY }}" >> .env
           echo "DATABASE_URL=postgresql://${{ secrets.DB_AUTH_USER }}:${{ secrets.DB_AUTH_PASSWORD }}@${{ secrets.DB_HOST }}:5432/${{ secrets.DB_NAME }}?schema=${{ secrets.DB_SCHEMA }}&host=${{ secrets.DB_HOST }}" >> .env
-#      - uses: actions/setup-node@v2
-#        with:
-#            node-version: 20.x
-#      - name: Install Dependencies and geenrate prisma client
-#        run: |
-#            npm install
-#            npx prisma generate
+      - name: setup package.json for gcp
+        run: |
+          mv package.json package.json.tmp
+          cat package.json.tmp | jq '{ type, dependencies } | { type, dependencies: .dependencies }' > package.json
+          rm package.json.tmp
 
       - uses: google-github-actions/setup-gcloud@v0
       - uses: google-github-actions/auth@v1
